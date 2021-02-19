@@ -5,10 +5,10 @@
             <div id="sidebar">
                 side menu
             </div>
+            <div id="header">
+                he
+            </div>
             <div id="main">
-                <div>
-                    header
-                </div>
                 <div id="content">
                     <router-link to="/">Home</router-link>
                     <router-link to="/about">About</router-link>
@@ -22,6 +22,13 @@
 </template>
 
 <style lang="scss">
+
+    #header{
+        position: fixed;
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        background: #42b983;
+    }
 
     #main{
         display: flex;
