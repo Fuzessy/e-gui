@@ -19,7 +19,7 @@
                 v-for="(submenuElem, subindex) in menuElem.submenu"
                 :key="subindex"
                 :id="submenuElem.id"
-                class="sub-menu"
+                class="sub-menu-item"
         >
           <div @click="navigateTo(submenuElem)" class="submenu-item">{{ submenuElem.label }}</div>
         </div>
@@ -119,9 +119,8 @@ export default class SideBarMenu extends Vue {
 }
 
 .main_menu:hover{
-  box-shadow: -8px 11px 5px -10px #2c3e50;
   color: #4e78ae;
-  transition: box-shadow ease-in 0.1s, color 0.1s;
+  transition: color 0.1s;
 }
 
 
@@ -150,7 +149,15 @@ export default class SideBarMenu extends Vue {
     cursor: context-menu;
   }
 
-.submenu-item:hover{
-  color: #05009c;
+.sub-menu-item{
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(44, 62, 80, 0.1);
 }
+
+.sub-menu-item:hover{
+   color: #4e78ae;
+   transition: color 0.1s;
+}
+
 </style>
