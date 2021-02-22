@@ -2,8 +2,17 @@
   <div class="menu">
     <div v-for="(menuElem, index) in menuStructure" :key="index">
       <div class="main_menu" @click="mainMenuElemClicked(menuElem.id)">
-        {{ menuElem.label }}
-      {{menuElem.submenuHidden ? " +" : " -"}}
+        <div>{{ menuElem.label }}</div>
+
+        <div  class="main_menu_icon"
+              :style="menuElem.submenuHidden === false ? 'display: none' : ''">
+          <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <div  class="main_menu_icon"
+              :style="menuElem.submenuHidden === true ? 'display: none' : ''">
+          <i class="fas fa-times"></i>
+        </div>
       </div>
       <div class="subMenu" :class="menuElem.submenuHidden ? 'submenuHidden' : ''">
         <div
@@ -98,6 +107,27 @@ export default class SideBarMenu extends Vue {
 .main_menu {
   cursor: context-menu;
   font-weight: 600;
+  display: flex;
+  flex-flow: row;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(44, 62, 80, 0.1);
+}
+
+.main_menu div:nth-child(1){
+  flex-grow: 1;
+}
+
+.main_menu:hover{
+  box-shadow: -8px 11px 5px -10px #2c3e50;
+  color: #4e78ae;
+  transition: box-shadow ease-in 0.1s, color 0.1s;
+}
+
+
+.main_menu_icon{
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .main-menu:hover {
