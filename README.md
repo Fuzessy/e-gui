@@ -42,3 +42,17 @@ használata:
 ```html
 <i class="fas fa-arrow-left"></i>
 ```
+
+# axios 
+http kérésekhez
+
+npm install --save axios vue-axios
+
+```javascript
+import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+...
+
+Vue.use(VueAxios, axios)
+```

@@ -32,6 +32,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Menu } from "./model/Menu";
 import router from "@/router";
+import axios from "axios";
 
 @Component
 export default class SideBarMenu extends Vue {
@@ -40,41 +41,14 @@ export default class SideBarMenu extends Vue {
   private menuStructure: Array<Menu> = [];
 
   mounted() {
-    this.menuStructure = [
-      {
-        id: 1,
-        label: "Dolgozók",
-        submenu: [
-          {
-            id: 11,
-            label: "Dolgozó rögzítése",
-            routeEvent: "/"
-          },
-          {
-            id: 12,
-            label: "Dolgozó adatainak módosítása",
-            routeEvent: "/about"
-          }
-        ]
-      },
-      {
-        id: 2,
-        label: "Tanulók",
-        submenu: [
-          {
-            id: 21,
-            label: "Tanuló felvétele",
-            routeEvent: "TANULO_FELVETEL"
-          },
-          {
-            id: 22,
-            label: "Tanuló áthelyezése másik csoportba",
-            routeEvent: "TANULO_ATHELYEZES"
-          }
-        ]
-      }
-    ];
-    this.menuStructure.forEach(menu => menu.submenuHidden = false);
+    this.menuStructure = [];
+    axios.get<Array<Menu>>('http://localhost:9999/process')
+      .then(response => {
+          const menus = response.data;
+          menus.forEach(menu => menu.submenuHidden = false);
+          this.menuStructure = menus;
+      })
+
   }
 
  private mainMenuElemClicked(menuId : number) : void {
@@ -90,8 +64,8 @@ export default class SideBarMenu extends Vue {
  }
 
  private navigateTo(menu : Menu) : void{
-      if(router.currentRoute.fullPath !== menu.routeEvent) {
-          router.push({path: menu.routeEvent})
+      if(router.currentRoute.fullPath !== menu.processCode) {
+          router.push({path: menu.processCode})
       }
   }
 }
