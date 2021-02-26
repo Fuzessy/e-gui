@@ -2,6 +2,6 @@ export interface Menu {
   id: number;
   label: string;
   submenu?: Array<Menu>;
-  processCode?: string;
+  processCode: string;
   submenuHidden?: boolean;
 }

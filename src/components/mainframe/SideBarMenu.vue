@@ -33,6 +33,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Menu } from "./model/Menu";
 import router from "@/router";
 import axios from "axios";
+import {ProcessCodePathResolver} from "@/router/ProcessCodePathResolver";
 
 @Component
 export default class SideBarMenu extends Vue {
@@ -65,7 +66,9 @@ export default class SideBarMenu extends Vue {
 
  private navigateTo(menu : Menu) : void{
       if(router.currentRoute.fullPath !== menu.processCode) {
-          router.push({path: menu.processCode})
+          const resolver : ProcessCodePathResolver = new ProcessCodePathResolver();
+          const path = resolver.getNextPage(menu.processCode);
+          router.push({path: path})
       }
   }
 }
