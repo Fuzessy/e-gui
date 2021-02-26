@@ -56,3 +56,9 @@ import VueAxios from 'vue-axios'
 
 Vue.use(VueAxios, axios)
 ```
+
+# vueutify
+mindent szépen beállít, de csak commit után, mert mindent felülírhat
+```javascript
+vue add vuetify
+```

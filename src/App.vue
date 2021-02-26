@@ -12,6 +12,6 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: { MainFrame }
-})
+  })
 export default class App extends Vue {}
 </script>

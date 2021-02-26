@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/Home.vue";
 import Message404 from "../views/errors/Message404.vue";
-import TanuloValasztas from '@/views/tanulo-valasztas/TanuloValasztas.vue';
+import TanuloValasztas from "@/views/tanulo-valasztas/TanuloValasztas.vue";
 
 Vue.use(VueRouter);
 
@@ -30,7 +30,7 @@ const routes: Array<RouteConfig> = [
     path: "*",
     name: "404",
     component: Message404
-  },
+  }
 ];
 
 const router = new VueRouter({
