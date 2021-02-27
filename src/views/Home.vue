@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    oldal1
+    <img src="https://nordicdairycongress.com/sites/default/files/billeder/nyheder/colourbox15033372.jpg" style="width:500px">
   </div>
 </template>
 
