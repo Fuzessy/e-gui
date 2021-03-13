@@ -1,9 +1,11 @@
 <template>
+  <div>
   <MainFrame>
     <template v-slot:main-content>
       <router-view />
     </template>
   </MainFrame>
+  </div>
 </template>
 
 <script lang="ts">

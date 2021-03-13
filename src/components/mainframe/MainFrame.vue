@@ -186,7 +186,7 @@ $header-height: 42px;
 }
 
 #content {
-  background: #e9e9e9;
+ /* background: #e9e9e9;*/
   flex-grow: 1;
   margin-top: $header-height;
 }
