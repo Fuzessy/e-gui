@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <table @blur="tableFocused()">
+    <table @blur="tableFocused()" ref="table">
       <thead>
         <tr v-if="hasSearchField()">
           <th v-for="(header, index) in headers" :key="index">
@@ -29,10 +29,14 @@
           </th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(row, index) in rowsInnerModel" :key="index"
-            @click="rowClicked(row)"
-            :class="{ 'selectedRow': row.selected }"
+      <tbody @keydown="keyPressed($event)">
+        <tr
+          v-for="(row, index) in rowsInnerModel"
+          :key="index"
+          :class="{ selectedRow: row.selected }"
+          tabindex="-1"
+          @focusin="rowClicked(row, $event)"
+          :ref="'row-' + index"
         >
           <td v-for="(header, colIndex) in headers" :key="colIndex">
             <div v-html="row[header['columnName']]"></div>
@@ -40,7 +44,7 @@
         </tr>
       </tbody>
     </table>
-    {{JSON.stringify(this.rowsInnerModel)}}
+    {{ JSON.stringify(this.rowsInnerModel) }}
   </div>
 </template>
 
@@ -56,9 +60,8 @@ export default class EwTable extends Vue {
   private filters: any[string] = [];
   private rowsInnerModel!: any[];
 
-  constructor(){
-      super();
-      window.addEventListener('keyup', this.keyPressed)
+  constructor() {
+    super();
   }
 
   private hasSearchField(): boolean {
@@ -147,47 +150,55 @@ export default class EwTable extends Vue {
     );
   }
 
-  private rowClicked(row: any) : void {
-      this.rowsInnerModel.forEach(r => r.selected = false);
-      row.selected = true;
-      this.$forceUpdate();
+  private rowClicked(row: any, event: any): void {
+    this.rowsInnerModel.forEach(r => (r.selected = false));
+    row.selected = true;
+    this.$forceUpdate();
+    console.log(event);
+    console.log(event.target);
+    event.target.focus();
   }
 
-
-
-  private keyPressed(event: any) : void{
-      //alert('jkjnk')
+  private keyPressed(event: KeyboardEvent): void {
+    console.log(event);
+    if (event.key === "ArrowUp") {
+      this.keyUpPressed();
+    } else if (event.key === "ArrowDown") {
+      this.keyDownPressed();
+    }
   }
-  private keyUpPressed(row: any) : void{
-      console.log("UP")
-      let index = this.rowsInnerModel.indexOf(row);
-      if(index === 0){
-          index = this.rowsInnerModel.length - 1;
-      }else{
-          index--;
+
+  private keyUpPressed(): void {
+    const selectedRow = this.rowsInnerModel.find(r => r.selected);
+    let index = this.rowsInnerModel.indexOf(selectedRow);
+    if (index >= 0) {
+      if (index === 0) {
+        index = this.rowsInnerModel.length - 1;
+      } else {
+        index--;
       }
-      this.rowsInnerModel[index].selected = true;
+      ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
+    }
   }
 
-    private keyDownPressed(row: any) : void{
-        console.log("UP")
-        let index = this.rowsInnerModel.indexOf(row);
-        if(index === 0){
-            index = this.rowsInnerModel.length - 1;
-        }else{
-            index--;
-        }
-        this.rowsInnerModel[index].selected = true;
+  private keyDownPressed(): void {
+    const selectedRow = this.rowsInnerModel.find(r => r.selected);
+    let index = this.rowsInnerModel.indexOf(selectedRow);
+    if (index >= 0) {
+      if (index === this.rowsInnerModel.length - 1) {
+        index = 0;
+      } else {
+        index++;
+      }
+      console.log(index);
+      ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
     }
-
-    private tableFocused() : void{
-      //alert("focused")
-    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap");
 
 $tableRadius: 5px;
 
@@ -201,11 +212,11 @@ table {
   border-spacing: 0;
   border: 1px solid rgba(5, 0, 156, 0.45);
   border-radius: $tableRadius;
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   cursor: default;
 }
 
-tbody{
+tbody {
   font-size: 12px;
 }
 
@@ -232,30 +243,25 @@ tr:first-child > th:last-child {
 tbody > tr:first-child > td {
   border-top: 2px solid rgba(5, 0, 156, 0.35);
 }
+
 /* kijelölés */
-  tbody > tr:nth-child(odd){
-    background-color: rgba(248, 245, 255, 1);
-  }
+tbody > tr:nth-child(odd) {
+  background-color: rgba(248, 245, 255, 1);
+}
 
-  tbody > tr:nth-child(odd):hover{
-    background-color: rgb(238, 235, 245, 1);
-  }
+tbody > tr:nth-child(odd):hover {
+  background-color: rgb(238, 235, 245, 1);
+}
 
-  tbody > tr:nth-child(even){
-    background-color: rgba(228, 233, 255, 1);
-  }
+tbody > tr:nth-child(even) {
+  background-color: rgba(228, 233, 255, 1);
+}
 
-  tbody > tr:nth-child(even):hover{
-    background-color: rgba(218, 223, 240, 1);
-  }
+tbody > tr:nth-child(even):hover {
+  background-color: rgba(218, 223, 240, 1);
+}
 
-  .selectedRow > td {
-    background-color: rgb(161, 180, 244);
-  }
-
-
-  *:focus {
-    color:red;
-    font-size: 20px;
-  }
+.selectedRow > td {
+  background-color: rgb(161, 180, 244);
+}
 </style>
