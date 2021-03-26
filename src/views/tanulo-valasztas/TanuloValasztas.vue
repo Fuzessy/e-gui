@@ -90,7 +90,8 @@ export default class TanuloValasztas extends Vue {
         label: "Név",
         columnName: "tanuloNev",
         searchField: {
-          type: "text"
+          type: "text",
+          defaultSearch: true
         }
       },
       {

@@ -9,15 +9,19 @@
                 <input
                   type="number"
                   @input="filterInputChanged()"
-                  placeholder="szűrő"
+                  :placeholder="isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'"
                   v-model="filters[header.columnName]"
+                  v-bind:class="{ 'default-search': isDefaultSzuro(header) }"
                 />
               </div>
               <div v-if="header.searchField.type === 'text'">
                 <input
                   @input="filterInputChanged()"
-                  placeholder="szűrő"
+                  :placeholder="isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'"
                   v-model="filters[header.columnName]"
+                  v-bind:class="{
+                    'default-search': isDefaultSzuro(header)
+                  }"
                 />
               </div>
             </div>
@@ -166,6 +170,20 @@ export default class EwTable extends Vue {
       this.keyUpPressed();
     } else if (event.key === "ArrowDown") {
       this.keyDownPressed();
+    } else {
+        const regex = /^[A-Za-z]+$/;
+        const isValid = regex.test(String.fromCharCode(event.keyCode));
+        if(isValid){
+            const header = this.headers.find( h => h.searchField?.defaultSearch);
+            if(header){
+                if(!this.filters[header.columnName]) {
+                    this.filters[header.columnName] = "";
+                }
+                this.filters[header.columnName] += event.key;
+                (document.querySelector(".default-search") as HTMLInputElement).focus();
+                this.filterInputChanged();
+            }
+        }
     }
   }
 
@@ -202,6 +220,10 @@ export default class EwTable extends Vue {
     if (index === 0) {
       (this.$refs["container"] as HTMLDivElement).scrollTop = 0
     }
+  }
+
+  private isDefaultSzuro(header: EwTableHeaderModel) : boolean{
+      return header.searchField?.defaultSearch === true;
   }
 }
 </script>
@@ -300,5 +322,9 @@ tbody > tr:nth-child(even):hover {
 
 .selectedRow > td {
   background-color: rgb(161, 180, 244);
+}
+
+.default-search{
+  background-color: rgba(213, 228, 243);
 }
 </style>

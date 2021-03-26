@@ -8,4 +8,5 @@ export default interface EwTableHeaderModel{
 
 interface SearchFieldModel {
     type: string;
+    defaultSearch?: boolean;
 }
