@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <div>
       <div id="sidebar" ref="sidebar" :class="sideBarClass">
         <div id="sidebar-header">
           <div class="sidebarlogo">
@@ -41,7 +40,6 @@
         <div id="content">
           <slot name="main-content"></slot>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -121,12 +119,14 @@ $header-height: 42px;
   @extend .transition-common;
   margin-left: 0 !important;
   width: 100%;
+  height:100%;
 }
 
 .headerWhenSidebarOpened {
   @extend .transition-common;
   margin-left: $side-width;
   width: calc(100% - #{$side-width});
+  height:100%;
 }
 
 .sidebarClosed {
@@ -198,6 +198,7 @@ $header-height: 42px;
   text-align: center;
   color: #2c3e50;
   display: block;
+  height: 100%;
 }
 
 #nav {

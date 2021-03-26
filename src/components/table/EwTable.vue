@@ -1,9 +1,9 @@
 <template>
-  <div class="table-container">
+  <div class="table-container" ref="container">
     <table @blur="tableFocused()" ref="table">
       <thead>
         <tr v-if="hasSearchField()">
-          <th v-for="(header, index) in headers" :key="index">
+          <th v-for="(header, index) in headers" :key="index" class="filter">
             <div v-if="header.searchField">
               <div v-if="header.searchField.type === 'number'">
                 <input
@@ -24,7 +24,7 @@
           </th>
         </tr>
         <tr>
-          <th v-for="(header, index) in headers" :key="index">
+          <th v-for="(header, index) in headers" :key="index" class="label">
             {{ header.label }}
           </th>
         </tr>
@@ -44,7 +44,7 @@
         </tr>
       </tbody>
     </table>
-    {{ JSON.stringify(this.rowsInnerModel) }}
+    <!--    {{ JSON.stringify(this.rowsInnerModel) }}-->
   </div>
 </template>
 
@@ -161,6 +161,7 @@ export default class EwTable extends Vue {
 
   private keyPressed(event: KeyboardEvent): void {
     console.log(event);
+    event.preventDefault()
     if (event.key === "ArrowUp") {
       this.keyUpPressed();
     } else if (event.key === "ArrowDown") {
@@ -179,6 +180,7 @@ export default class EwTable extends Vue {
       }
       ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
     }
+    this.afterRowFocused(index);
   }
 
   private keyDownPressed(): void {
@@ -193,6 +195,13 @@ export default class EwTable extends Vue {
       console.log(index);
       ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
     }
+    this.afterRowFocused(index);
+  }
+
+  private afterRowFocused(index: number): void {
+    if (index === 0) {
+      (this.$refs["container"] as HTMLDivElement).scrollTop = 0
+    }
   }
 }
 </script>
@@ -204,8 +213,17 @@ $tableRadius: 5px;
 
 .table-container {
   display: flex;
-  align-items: center;
   flex-flow: column;
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  background-blend-mode: color;
+  background: repeating-linear-gradient(
+    145deg,
+    rgba(138, 138, 219, 0.05),
+    rgba(62, 99, 182, 0.06) 10px,
+    rgba(207, 207, 211, 0.05) 20px
+  );
 }
 
 table {
@@ -214,6 +232,24 @@ table {
   border-radius: $tableRadius;
   font-family: "Inter", serif;
   cursor: default;
+}
+
+thead {
+  th.filter {
+    position: sticky;
+    top: 0;
+    background-color: white;
+
+    input {
+      width: 92%;
+    }
+  }
+
+  th.label {
+    position: sticky;
+    top: 25px;
+    background-color: white;
+  }
 }
 
 tbody {

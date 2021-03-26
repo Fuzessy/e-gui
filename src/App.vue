@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%">
   <MainFrame>
     <template v-slot:main-content>
       <router-view />
