@@ -227,6 +227,7 @@ $tableRadius: 5px;
 }
 
 table {
+  width: 100%;
   border-spacing: 0;
   border: 1px solid rgba(5, 0, 156, 0.45);
   border-radius: $tableRadius;
