@@ -2,7 +2,7 @@
   <div class="folyamat-frame">
 
     <div class="folyamat-header">
-      folyamat-header
+      folyamat-header <br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd
     </div>
 
     <div class="folyamat-center">

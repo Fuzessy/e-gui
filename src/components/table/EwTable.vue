@@ -1,8 +1,9 @@
 <template>
   <div class="table-container" ref="container">
     <table @blur="tableFocused()" ref="table">
-      <thead>
+      <thead ref="tableHeader">
         <tr v-if="hasSearchField()">
+          <th class="filter"></th>
           <th v-for="(header, index) in headers" :key="index" class="filter">
             <div v-if="header.searchField">
               <div v-if="header.searchField.type === 'number'">
@@ -28,6 +29,7 @@
           </th>
         </tr>
         <tr>
+          <th class="label">#</th>
           <th v-for="(header, index) in headers" :key="index" class="label">
             {{ header.label }}
           </th>
@@ -42,6 +44,7 @@
           @focusin="rowClicked(row, $event)"
           :ref="'row-' + index"
         >
+          <td class="rowNumber">{{index + 1}}</td>
           <td v-for="(header, colIndex) in headers" :key="colIndex">
             <div v-html="row[header['columnName']]"></div>
           </td>
@@ -219,6 +222,17 @@ export default class EwTable extends Vue {
   private afterRowFocused(index: number): void {
     if (index === 0) {
       (this.$refs["container"] as HTMLDivElement).scrollTop = 0
+    }else {
+        const domRectContainer: DOMRect = (this.$refs["container"] as HTMLElement).getBoundingClientRect();
+        const domRectHeader: DOMRect = (this.$refs["tableHeader"] as HTMLElement).getBoundingClientRect();
+        const domRectRow: DOMRect = ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).getBoundingClientRect();
+
+        if((domRectContainer.top + domRectHeader.height)  >  domRectRow.top){
+            const scrollTopPosition = (this.$refs["container"] as HTMLElement).scrollTop;
+            if(scrollTopPosition > 20){
+                (this.$refs["container"] as HTMLElement).scrollTop = scrollTopPosition - 20
+            }
+        }
     }
   }
 
@@ -327,4 +341,8 @@ tbody > tr:nth-child(even):hover {
 .default-search{
   background-color: rgba(213, 228, 243);
 }
+  .rowNumber{
+    color: #acabab;
+    font-weight: bold;
+  }
 </style>
