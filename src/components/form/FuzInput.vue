@@ -33,7 +33,7 @@ export default class FuzInput extends Vue {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  padding: 5px 2px 2px 10px;
+  padding: 5px 10px 2px 10px;
   color: grey;
 }
 

@@ -22,23 +22,41 @@
                 padding-top: 10px;
                     "
           >
-            Részletek
+            Részletek-
           </div>
-          <div style="display: flex; flex-direction: row; width:100%">
-            <div style="flex-grow: 1">
-              <fuz-input v-model="inputModel"></fuz-input>
+          <template v-if="selectedRow">
+            <div style="display: flex; flex-direction: row; width:100%">
+              <div style="flex-grow: 1">
+                <fuz-input
+                    label="Tanuló azonosító"
+                    disabled
+                    v-model="selectedRow.tanuloId"/>
+              </div>
+              <div style="flex-grow: 1">
+                <fuz-input
+                    label="Tanuló neve"
+                    disabled
+                    v-model="selectedRow.tanuloNev"/>
+              </div>
             </div>
-            <div style="flex-grow: 1">
-              <fuz-input v-model="inputModel"
-                         :label="inputModel"
-                          disabled
-              ></fuz-input>
+            <div style="display: flex">
+              <div style="flex-grow: 1">
+                <fuz-input
+                    label="Csoport neve"
+                    disabled
+                    v-model="selectedRow.csoportNev"/>
+              </div>
+              <div style="flex-grow: 1">
+                <fuz-input
+                    label="Csoport vezető"
+                    disabled
+                    v-model="selectedRow.csoportVezetoNev"/>
+              </div>
             </div>
-          </div>
-          <div>
-            <fuz-input></fuz-input>
-          </div>
-          <div>{{selectedRow}}</div>
+          </template>
+          <template v-else>
+            nincs kijelölt sor
+          </template>
         </div>
       </div>
       <div class="folyamat-buttons">
@@ -70,8 +88,6 @@ export default class TanuloValasztas extends Vue {
   private headers: FuzTableHeaderModel[] = [];
   private tanulok: any[] = [];
   private selectedRow: any = null
-
-  private inputModel = "hy";
 
   constructor() {
     super();
@@ -164,7 +180,7 @@ export default class TanuloValasztas extends Vue {
   }
 
   .folyamat-details {
-    background-color: rgba(158, 188, 243, 0.25);
+    background-color: rgba(209, 210, 255, 0.23);
     height: 100%;
   }
 }
