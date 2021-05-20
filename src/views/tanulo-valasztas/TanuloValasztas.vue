@@ -7,7 +7,11 @@
     <div class="folyamat-center">
       <div class="folyamat-main">
         <div class="folyamat-tablazat">
-          <FuzTable :headers="ewheaders" :rows="tanulok"></FuzTable>
+          <FuzTable
+              :headers="headers"
+              :rows="tanulok"
+              @row-selected="rowSelected"
+          />
         </div>
         <div class="folyamat-details">
           <div
@@ -27,13 +31,14 @@
             <div style="flex-grow: 1">
               <fuz-input v-model="inputModel"
                          :label="inputModel"
-                          disabled="true"
+                          disabled
               ></fuz-input>
             </div>
           </div>
           <div>
             <fuz-input></fuz-input>
           </div>
+          <div>{{selectedRow}}</div>
         </div>
       </div>
       <div class="folyamat-buttons">
@@ -62,27 +67,15 @@ import FuzInput from "@/components/form/FuzInput.vue";
   }
 })
 export default class TanuloValasztas extends Vue {
-  private headers: any[] = [];
-  private ewheaders: FuzTableHeaderModel[] = [];
+  private headers: FuzTableHeaderModel[] = [];
   private tanulok: any[] = [];
+  private selectedRow: any = null
 
   private inputModel = "hy";
 
   constructor() {
     super();
     this.headers = [
-      {
-        text: "#TANULO_ID",
-        value: "tanuloId",
-        align: "start",
-        sortable: false
-      },
-      { text: "Név", value: "tanuloNev" },
-      { text: "Csoport", value: "csoportNev" },
-      { text: "Csoport vezető", value: "csoportVezetoNev" },
-      { text: "Actions", value: "actions", sortable: false }
-    ];
-    this.ewheaders = [
       {
         label: "#TANULO_ID",
         columnName: "tanuloId",
@@ -120,15 +113,10 @@ export default class TanuloValasztas extends Vue {
         sortable: false
       }
     ];
+  }
 
-    /*this.tanulok = [
-            {
-                tanuloId: 1,
-                tanuloNev: 'Füzesi Zsoltika',
-                csoportNev: 'Alma csoport',
-                csoportVezetoNev: 'Ecserika Barbika'
-            }
-        ];*/
+  private rowSelected(row: any) : void {
+    this.selectedRow = row;
   }
 
   mounted() {

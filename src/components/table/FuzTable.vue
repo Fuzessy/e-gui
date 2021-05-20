@@ -43,24 +43,23 @@
         <tr
           v-for="(row, index) in rowsInnerModel"
           :key="index"
-          :class="{ selectedRow: row.selected }"
+          :class="{ selectedRow: row.innerRowModel.selected }"
           tabindex="-1"
           @focusin="rowClicked(row, $event)"
           :ref="'row-' + index"
         >
           <td class="rowNumber">{{ index + 1 }}</td>
           <td v-for="(header, colIndex) in headers" :key="colIndex">
-            <div v-html="row[header['columnName']]"></div>
+            <div v-html="row.innerRowModel[header['columnName']]"></div>
           </td>
         </tr>
       </tbody>
     </table>
-    <!--    {{ JSON.stringify(this.rowsInnerModel) }}-->
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import {Component, Emit, Prop, Vue, Watch} from "vue-property-decorator";
 import FuzTableHeaderModel from "@/components/table/model/FuzTableHeaderModel";
 
 @Component
@@ -69,7 +68,7 @@ export default class FuzTable extends Vue {
   @Prop({ required: true, default: [] }) rows!: [];
 
   private filters: any[string] = [];
-  private rowsInnerModel!: any[];
+  private rowsInnerModel!: {innerRowModel:any, originalModel: any}[] = []
 
   constructor() {
     super();
@@ -110,6 +109,7 @@ export default class FuzTable extends Vue {
       });
 
     this.$forceUpdate();
+    this.rowSelected();
   }
 
   private filterByColumnFilter(
@@ -129,10 +129,10 @@ export default class FuzTable extends Vue {
 
   private textSearch(columnName: string, filterValue: string) {
     this.rowsInnerModel = this.rowsInnerModel.filter(row =>
-      this.filterFields(row, columnName, filterValue)
+      this.filterFields(row.innerRowModel, columnName, filterValue)
     );
     this.rowsInnerModel.forEach(row => {
-      row[columnName] = row[columnName].replace(
+      row.innerRowModel[columnName] = row.innerRowModel[columnName].replace(
         new RegExp(filterValue.toUpperCase(), "gi"),
         (match: string) => {
           return (
@@ -152,22 +152,28 @@ export default class FuzTable extends Vue {
   }
 
   private generateInnerModelFromRows(from: any[]): any[] {
-    return JSON.parse(JSON.stringify(from));
+    return from.map(row => {
+      return {
+          innerRowModel: JSON.parse(JSON.stringify(row)),
+          originalModel: row
+        };
+    });
   }
 
   private numberSearch(columnName: string, filterValue: string) {
     this.rowsInnerModel = this.rowsInnerModel.filter(
-      row => row[columnName] == filterValue
+      row => row.innerRowModel[columnName] == filterValue
     );
   }
 
   private rowClicked(row: any, event: any): void {
-    this.rowsInnerModel.forEach(r => (r.selected = false));
-    row.selected = true;
+    this.rowsInnerModel.forEach(r => (r.innerRowModel.selected = false));
+    row.innerRowModel.selected = true;
     this.$forceUpdate();
     console.log(event);
     console.log(event.target);
     event.target.focus();
+    this.rowSelected();
   }
 
   private keyPressed(event: KeyboardEvent): void {
@@ -197,7 +203,7 @@ export default class FuzTable extends Vue {
   }
 
   private keyUpPressed(): void {
-    const selectedRow = this.rowsInnerModel.find(r => r.selected);
+    const selectedRow = this.rowsInnerModel.find(r => r.innerRowModel.selected);
     let index = this.rowsInnerModel.indexOf(selectedRow);
     if (index >= 0) {
       if (index === 0) {
@@ -211,7 +217,7 @@ export default class FuzTable extends Vue {
   }
 
   private keyDownPressed(): void {
-    const selectedRow = this.rowsInnerModel.find(r => r.selected);
+    const selectedRow = this.rowsInnerModel.find(r => r.innerRowModel.selected);
     let index = this.rowsInnerModel.indexOf(selectedRow);
     if (index >= 0) {
       if (index === this.rowsInnerModel.length - 1) {
@@ -226,6 +232,16 @@ export default class FuzTable extends Vue {
   }
 
   private afterRowFocused(index: number): void {
+    this.handleScroll(index);
+    this.rowSelected();
+  }
+
+  @Emit()
+  private rowSelected() : void {
+    return this.rowsInnerModel.find(r => r.innerRowModel.selected)?.originalModel;
+  }
+
+  private handleScroll(index: number): void {
     if (index === 0) {
       (this.$refs["container"] as HTMLDivElement).scrollTop = 0;
     } else {
