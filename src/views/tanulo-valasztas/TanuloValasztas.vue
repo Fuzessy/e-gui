@@ -1,34 +1,38 @@
 <template>
   <div class="folyamat-frame">
-
     <div class="folyamat-header">
-      folyamat-header <br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd<br/>adasd
+      folyamat-header
     </div>
 
     <div class="folyamat-center">
       <div class="folyamat-main">
         <div class="folyamat-tablazat">
-          <EwTable :headers="ewheaders" :rows="tanulok"></EwTable>
+          <FuzTable :headers="ewheaders" :rows="tanulok"></FuzTable>
         </div>
         <div class="folyamat-details">
-          <div style="
+          <div
+            class="testMe"
+            style="
                 text-align: left;
                 padding-left: 10px;
                 padding-top: 10px;
-                    ">
+                    "
+          >
             Részletek
           </div>
+          <div style="display: flex; flex-direction: row; width:100%">
+            <div style="flex-grow: 1">
+              <fuz-input v-model="inputModel"></fuz-input>
+            </div>
+            <div style="flex-grow: 1">
+              <fuz-input v-model="inputModel"
+                         :label="inputModel"
+                          disabled="true"
+              ></fuz-input>
+            </div>
+          </div>
           <div>
-<!--            <div style="-->
-<!--              height: 80px;-->
-<!--              width: 80px;-->
-<!--              text-align: center;-->
-<!--              background-color: #7cb3e3;-->
-<!--              clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);"-->
-<!--            >-->
-<!--             <p>Részletek</p>-->
-<!--            </div>-->
-ú
+            <fuz-input></fuz-input>
           </div>
         </div>
       </div>
@@ -41,26 +45,28 @@
       folyamat-footer
     </div>
   </div>
-
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { Route } from "vue-router";
 import axios from "axios";
-import EwTable from "@/components/table/EwTable.vue";
-import EwTableHeaderModel from "@/components/table/model/EwTableHeaderModel";
+import FuzTable from "@/components/table/FuzTable.vue";
+import FuzTableHeaderModel from "@/components/table/model/FuzTableHeaderModel";
+import FuzInput from "@/components/form/FuzInput.vue";
 
 @Component({
-  components: { EwTable },
+  components: { FuzInput, FuzTable },
   beforeRouteEnter(to: Route, from: Route, next: Function): void {
     next();
   }
 })
 export default class TanuloValasztas extends Vue {
   private headers: any[] = [];
-  private ewheaders: EwTableHeaderModel[] = [];
+  private ewheaders: FuzTableHeaderModel[] = [];
   private tanulok: any[] = [];
+
+  private inputModel = "hy";
 
   constructor() {
     super();
@@ -136,6 +142,10 @@ export default class TanuloValasztas extends Vue {
 </script>
 
 <style scoped lang="scss">
+.testMe {
+  color: $myprimary;
+}
+
 .folyamat-frame {
   display: flex;
   flex-direction: column;
@@ -161,7 +171,7 @@ export default class TanuloValasztas extends Vue {
   display: flex;
   flex-direction: column;
 
-  .folyamat-tablazat{
+  .folyamat-tablazat {
     height: 200px;
   }
 

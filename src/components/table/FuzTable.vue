@@ -10,7 +10,9 @@
                 <input
                   type="number"
                   @input="filterInputChanged()"
-                  :placeholder="isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'"
+                  :placeholder="
+                    isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'
+                  "
                   v-model="filters[header.columnName]"
                   v-bind:class="{ 'default-search': isDefaultSzuro(header) }"
                 />
@@ -18,7 +20,9 @@
               <div v-if="header.searchField.type === 'text'">
                 <input
                   @input="filterInputChanged()"
-                  :placeholder="isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'"
+                  :placeholder="
+                    isDefaultSzuro(header) ? 'default szűrő' : 'szűrő'
+                  "
                   v-model="filters[header.columnName]"
                   v-bind:class="{
                     'default-search': isDefaultSzuro(header)
@@ -44,7 +48,7 @@
           @focusin="rowClicked(row, $event)"
           :ref="'row-' + index"
         >
-          <td class="rowNumber">{{index + 1}}</td>
+          <td class="rowNumber">{{ index + 1 }}</td>
           <td v-for="(header, colIndex) in headers" :key="colIndex">
             <div v-html="row[header['columnName']]"></div>
           </td>
@@ -57,11 +61,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import EwTableHeaderModel from "@/components/table/model/EwTableHeaderModel";
+import FuzTableHeaderModel from "@/components/table/model/FuzTableHeaderModel";
 
 @Component
-export default class EwTable extends Vue {
-  @Prop({ required: true, default: [] }) headers!: EwTableHeaderModel[];
+export default class FuzTable extends Vue {
+  @Prop({ required: true, default: [] }) headers!: FuzTableHeaderModel[];
   @Prop({ required: true, default: [] }) rows!: [];
 
   private filters: any[string] = [];
@@ -168,25 +172,27 @@ export default class EwTable extends Vue {
 
   private keyPressed(event: KeyboardEvent): void {
     console.log(event);
-    event.preventDefault()
+    event.preventDefault();
     if (event.key === "ArrowUp") {
       this.keyUpPressed();
     } else if (event.key === "ArrowDown") {
       this.keyDownPressed();
     } else {
-        const regex = /^[A-Za-z]+$/;
-        const isValid = regex.test(String.fromCharCode(event.keyCode));
-        if(isValid){
-            const header = this.headers.find( h => h.searchField?.defaultSearch);
-            if(header){
-                if(!this.filters[header.columnName]) {
-                    this.filters[header.columnName] = "";
-                }
-                this.filters[header.columnName] += event.key;
-                (document.querySelector(".default-search") as HTMLInputElement).focus();
-                this.filterInputChanged();
-            }
+      const regex = /^[A-Za-z]+$/;
+      const isValid = regex.test(String.fromCharCode(event.keyCode));
+      if (isValid) {
+        const header = this.headers.find(h => h.searchField?.defaultSearch);
+        if (header) {
+          if (!this.filters[header.columnName]) {
+            this.filters[header.columnName] = "";
+          }
+          this.filters[header.columnName] += event.key;
+          (document.querySelector(
+            ".default-search"
+          ) as HTMLInputElement).focus();
+          this.filterInputChanged();
         }
+      }
     }
   }
 
@@ -221,23 +227,31 @@ export default class EwTable extends Vue {
 
   private afterRowFocused(index: number): void {
     if (index === 0) {
-      (this.$refs["container"] as HTMLDivElement).scrollTop = 0
-    }else {
-        const domRectContainer: DOMRect = (this.$refs["container"] as HTMLElement).getBoundingClientRect();
-        const domRectHeader: DOMRect = (this.$refs["tableHeader"] as HTMLElement).getBoundingClientRect();
-        const domRectRow: DOMRect = ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).getBoundingClientRect();
+      (this.$refs["container"] as HTMLDivElement).scrollTop = 0;
+    } else {
+      const domRectContainer: DOMRect = (this.$refs[
+        "container"
+      ] as HTMLElement).getBoundingClientRect();
+      const domRectHeader: DOMRect = (this.$refs[
+        "tableHeader"
+      ] as HTMLElement).getBoundingClientRect();
+      const domRectRow: DOMRect = ((this.$refs[
+        "row-" + index
+      ] as Element[])[0] as HTMLElement).getBoundingClientRect();
 
-        if((domRectContainer.top + domRectHeader.height)  >  domRectRow.top){
-            const scrollTopPosition = (this.$refs["container"] as HTMLElement).scrollTop;
-            if(scrollTopPosition > 20){
-                (this.$refs["container"] as HTMLElement).scrollTop = scrollTopPosition - 20
-            }
+      if (domRectContainer.top + domRectHeader.height > domRectRow.top) {
+        const scrollTopPosition = (this.$refs["container"] as HTMLElement)
+          .scrollTop;
+        if (scrollTopPosition > 20) {
+          (this.$refs["container"] as HTMLElement).scrollTop =
+            scrollTopPosition - 20;
         }
+      }
     }
   }
 
-  private isDefaultSzuro(header: EwTableHeaderModel) : boolean{
-      return header.searchField?.defaultSearch === true;
+  private isDefaultSzuro(header: FuzTableHeaderModel): boolean {
+    return header.searchField?.defaultSearch === true;
   }
 }
 </script>
@@ -338,11 +352,11 @@ tbody > tr:nth-child(even):hover {
   background-color: rgb(161, 180, 244);
 }
 
-.default-search{
+.default-search {
   background-color: rgba(213, 228, 243);
 }
-  .rowNumber{
-    color: #acabab;
-    font-weight: bold;
-  }
+.rowNumber {
+  color: #acabab;
+  font-weight: bold;
+}
 </style>
