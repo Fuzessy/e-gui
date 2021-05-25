@@ -169,10 +169,8 @@ export default class FuzTable extends Vue {
   private rowClicked(row: any, event: any): void {
     this.rowsInnerModel.forEach(r => (r.innerRowModel.selected = false));
     row.innerRowModel.selected = true;
-    this.$forceUpdate();
-    console.log(event);
-    console.log(event.target);
     event.target.focus();
+    this.$forceUpdate();
     this.rowSelected();
   }
 

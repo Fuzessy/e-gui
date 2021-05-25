@@ -22,7 +22,14 @@
                 padding-top: 10px;
                     "
           >
-            Részletek-
+            <div>
+              <div>Részletek</div>
+              <div style="
+                border-bottom: 1px solid rgba(128,138,255,0.27);
+                filter: blur(2px);
+              "></div>
+            </div>
+
           </div>
           <template v-if="selectedRow">
             <div style="display: flex; flex-direction: row; width:100%">
@@ -55,7 +62,10 @@
             </div>
           </template>
           <template v-else>
-            nincs kijelölt sor
+            <p style="font-size: 36px">
+            <i class="far fa-times-circle"></i>
+            </p>
+            <p>Nincs kijelölt sor.</p>
           </template>
         </div>
       </div>
