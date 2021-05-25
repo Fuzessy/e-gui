@@ -68,7 +68,7 @@ export default class FuzTable extends Vue {
   @Prop({ required: true, default: [] }) rows!: [];
 
   private filters: any[string] = [];
-  private rowsInnerModel!: {innerRowModel:any, originalModel: any}[] = []
+  private rowsInnerModel: {innerRowModel:any, originalModel: any}[] = []
 
   constructor() {
     super();
@@ -204,31 +204,35 @@ export default class FuzTable extends Vue {
 
   private keyUpPressed(): void {
     const selectedRow = this.rowsInnerModel.find(r => r.innerRowModel.selected);
-    let index = this.rowsInnerModel.indexOf(selectedRow);
-    if (index >= 0) {
-      if (index === 0) {
-        index = this.rowsInnerModel.length - 1;
-      } else {
-        index--;
+    if (selectedRow) {
+      let index = this.rowsInnerModel.indexOf(selectedRow);
+      if (index >= 0) {
+        if (index === 0) {
+          index = this.rowsInnerModel.length - 1;
+        } else {
+          index--;
+        }
+        ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
       }
-      ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
+      this.afterRowFocused(index);
     }
-    this.afterRowFocused(index);
   }
 
   private keyDownPressed(): void {
     const selectedRow = this.rowsInnerModel.find(r => r.innerRowModel.selected);
-    let index = this.rowsInnerModel.indexOf(selectedRow);
-    if (index >= 0) {
-      if (index === this.rowsInnerModel.length - 1) {
-        index = 0;
-      } else {
-        index++;
+    if(selectedRow){
+      let index = this.rowsInnerModel.indexOf(selectedRow);
+      if (index >= 0) {
+        if (index === this.rowsInnerModel.length - 1) {
+          index = 0;
+        } else {
+          index++;
+        }
+        console.log(index);
+        ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
       }
-      console.log(index);
-      ((this.$refs["row-" + index] as Element[])[0] as HTMLElement).focus();
+      this.afterRowFocused(index);
     }
-    this.afterRowFocused(index);
   }
 
   private afterRowFocused(index: number): void {
