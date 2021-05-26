@@ -6,12 +6,17 @@
 
     <div class="folyamat-center">
       <div class="folyamat-main">
-        <div class="folyamat-tablazat">
-          <FuzTable
-              :headers="headers"
-              :rows="tanulok"
-              @row-selected="rowSelected"
-          />
+        <div class="folyamat-tablazat" ref="folyamat-tablazat">
+            <FuzTable
+                :headers="headers"
+                :rows="tanulok"
+                @row-selected="rowSelected"
+            />
+        </div>
+        <div class="splitter"
+             @mousedown="splitterMouseDown"
+        >
+          <i class="fas fa-grip-lines"></i>
         </div>
         <div class="folyamat-details">
           <div
@@ -97,7 +102,11 @@ import FuzInput from "@/components/form/FuzInput.vue";
 export default class TanuloValasztas extends Vue {
   private headers: FuzTableHeaderModel[] = [];
   private tanulok: any[] = [];
-  private selectedRow: any = null
+  private selectedRow: any = null;
+
+  private splitterStatus = 'DEFAULT';
+  private starterHeight = 0;
+  private downY = 0;
 
   constructor() {
     super();
@@ -152,6 +161,32 @@ export default class TanuloValasztas extends Vue {
         this.tanulok = response.data;
       });
   }
+
+  private splitterMouseDown(event: MouseEvent) : void {
+    console.log("DOWN- " + event.x + " " + event.y);
+    this.downY = event.y;
+    this.splitterStatus = 'DOWN'
+    this.starterHeight = (this.$refs['folyamat-tablazat'] as HTMLDivElement).getBoundingClientRect().height;
+    document.addEventListener('mousemove', this.splitterMouseMove);
+    document.addEventListener('mouseup', this.splitterMouseUp);
+  }
+
+  private splitterMouseMove(event: MouseEvent) : void {
+    if(this.splitterStatus === 'DOWN'){
+      const tablazatDiv = (this.$refs['folyamat-tablazat'] as HTMLDivElement);
+      const n = event.y - this.downY;
+      console.log(n + " - " + this.starterHeight)
+      console.log(`${this.starterHeight + n}px`)
+      tablazatDiv.style.height = `${this.starterHeight + n}px`;
+    }
+
+    //tablazatDiv.style.height = `$(tablazatDiv.getBoundingClientRect().height + n)px`;
+  }
+
+  private splitterMouseUp(event: MouseEvent) : void {
+    console.log("UP  - " + event.x + " " + event.y);
+    this.splitterStatus = "NO"
+  }
 }
 </script>
 
@@ -198,5 +233,13 @@ export default class TanuloValasztas extends Vue {
 .folyamat-buttons {
   background-color: #4e78ae;
   min-width: 150px;
+}
+
+.splitter{
+  cursor: n-resize;
+  background-color: rgba(209, 210, 255, 0.23);
+  color:$myprimary;
+  height: 10px;
+  margin-top: -3px;
 }
 </style>
