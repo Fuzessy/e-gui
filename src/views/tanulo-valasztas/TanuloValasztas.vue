@@ -3,20 +3,18 @@
     <template v-slot:folyamat-main>
       <div class="folyamat-tablazat" ref="folyamat-tablazat">
         <FuzTable
-            :headers="headers"
-            :rows="tanulok"
-            @row-selected="rowSelected"
+          :headers="headers"
+          :rows="tanulok"
+          @row-selected="rowSelected"
         />
       </div>
-      <div class="splitter"
-           @mousedown="splitterMouseDown"
-      >
+      <div class="splitter" @mousedown="splitterMouseDown">
         <i class="fas fa-grip-lines"></i>
       </div>
       <div class="folyamat-details">
         <div
-            class="testMe"
-            style="
+          class="testMe"
+          style="
                 text-align: left;
                 padding-left: 10px;
                 padding-top: 10px;
@@ -24,40 +22,45 @@
         >
           <div>
             <div>Részletek</div>
-            <div style="
+            <div
+              style="
                 border-bottom: 1px solid rgba(128,138,255,0.27);
                 filter: blur(2px);
-              "></div>
+              "
+            ></div>
           </div>
-
         </div>
         <template v-if="selectedRow">
           <div style="display: flex; flex-direction: row; width:100%">
             <div style="flex-grow: 1">
               <fuz-input
-                  label="Tanuló azonosító"
-                  disabled
-                  v-model="selectedRow.tanuloId"/>
+                label="Tanuló azonosító"
+                disabled
+                v-model="selectedRow.tanuloId"
+              />
             </div>
             <div style="flex-grow: 1">
               <fuz-input
-                  label="Tanuló neve"
-                  disabled
-                  v-model="selectedRow.tanuloNev"/>
+                label="Tanuló neve"
+                disabled
+                v-model="selectedRow.tanuloNev"
+              />
             </div>
           </div>
           <div style="display: flex">
             <div style="flex-grow: 1">
               <fuz-input
-                  label="Csoport neve"
-                  disabled
-                  v-model="selectedRow.csoportNev"/>
+                label="Csoport neve"
+                disabled
+                v-model="selectedRow.csoportNev"
+              />
             </div>
             <div style="flex-grow: 1">
               <fuz-input
-                  label="Csoport vezető"
-                  disabled
-                  v-model="selectedRow.csoportVezetoNev"/>
+                label="Csoport vezető"
+                disabled
+                v-model="selectedRow.csoportVezetoNev"
+              />
             </div>
           </div>
         </template>
@@ -92,7 +95,7 @@ export default class TanuloValasztas extends Vue {
   private tanulok: any[] = [];
   private selectedRow: any = null;
 
-  private splitterStatus = 'DEFAULT';
+  private splitterStatus = "DEFAULT";
   private starterHeight = 0;
   private downY = 0;
 
@@ -138,7 +141,7 @@ export default class TanuloValasztas extends Vue {
     ];
   }
 
-  private rowSelected(row: any) : void {
+  private rowSelected(row: any): void {
     this.selectedRow = row;
   }
 
@@ -150,30 +153,32 @@ export default class TanuloValasztas extends Vue {
       });
   }
 
-  private splitterMouseDown(event: MouseEvent) : void {
+  private splitterMouseDown(event: MouseEvent): void {
     console.log("DOWN- " + event.x + " " + event.y);
     this.downY = event.y;
-    this.splitterStatus = 'DOWN'
-    this.starterHeight = (this.$refs['folyamat-tablazat'] as HTMLDivElement).getBoundingClientRect().height;
-    document.addEventListener('mousemove', this.splitterMouseMove);
-    document.addEventListener('mouseup', this.splitterMouseUp);
+    this.splitterStatus = "DOWN";
+    this.starterHeight = (this.$refs[
+      "folyamat-tablazat"
+    ] as HTMLDivElement).getBoundingClientRect().height;
+    document.addEventListener("mousemove", this.splitterMouseMove);
+    document.addEventListener("mouseup", this.splitterMouseUp);
   }
 
-  private splitterMouseMove(event: MouseEvent) : void {
-    if(this.splitterStatus === 'DOWN'){
-      const tablazatDiv = (this.$refs['folyamat-tablazat'] as HTMLDivElement);
+  private splitterMouseMove(event: MouseEvent): void {
+    if (this.splitterStatus === "DOWN") {
+      const tablazatDiv = this.$refs["folyamat-tablazat"] as HTMLDivElement;
       const n = event.y - this.downY;
-      console.log(n + " - " + this.starterHeight)
-      console.log(`${this.starterHeight + n}px`)
+      console.log(n + " - " + this.starterHeight);
+      console.log(`${this.starterHeight + n}px`);
       tablazatDiv.style.height = `${this.starterHeight + n}px`;
     }
 
     //tablazatDiv.style.height = `$(tablazatDiv.getBoundingClientRect().height + n)px`;
   }
 
-  private splitterMouseUp(event: MouseEvent) : void {
+  private splitterMouseUp(event: MouseEvent): void {
     console.log("UP  - " + event.x + " " + event.y);
-    this.splitterStatus = "NO"
+    this.splitterStatus = "NO";
   }
 }
 </script>
@@ -192,10 +197,10 @@ export default class TanuloValasztas extends Vue {
   height: 100%;
 }
 
-.splitter{
+.splitter {
   cursor: n-resize;
   background-color: rgba(209, 210, 255, 0.23);
-  color:$myprimary;
+  color: $myprimary;
   height: 10px;
   margin-top: -3px;
 }
